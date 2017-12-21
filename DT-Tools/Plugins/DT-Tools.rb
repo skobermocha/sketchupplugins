@@ -1,5 +1,4 @@
 require 'sketchup.rb'
-#load 'DT-Tools/VolumeCalc.rb'
 Sketchup::require 'DT-Tools/ExportCBECC.rb'
 
 if( not file_loaded?("DT-Tools/DT-Tools.rb") )

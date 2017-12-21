@@ -369,7 +369,7 @@ def getWindows(wallFace, wallOrient)
 				Door	"Door_' + at.to_s + '"  
 					Status = "New"
 					IsVerified = 0
-					Area = ' + @win_areas[at]/@area_divisor +'
+					Area = ' + round(@win_areas[at]/@area_divisor) +'
 					Ufactor = 0.5
 					exUfactor = 0.5
 					..
@@ -381,10 +381,10 @@ def getWindows(wallFace, wallOrient)
 					Status = "New"
 					IsVerified = 0
 					SpecMethod = "Overall Window Area"
-					Area = ' + @win_areas[at]/@area_divisor +'
+					Area = ' + round(@win_areas[at]/@area_divisor) +'
 					Multiplier = 1
 					WinType = "' + @windows[at] + '"
-					exArea = '+ @win_areas[at]/@area_divisor +'
+					exArea = '+ round(@win_areas[at]/@area_divisor) +'
 					exMultiplier = 1
 					exUfactorSHGCSource = "NFRC"
 					exExteriorShade = "Insect Screen (default)"
@@ -471,6 +471,7 @@ def outCBECCdata (user_input)
 				BEMVersion = 5
 				CreateDate = 1472056558
 				ModDate = 1472056726
+				RunTitle = "title"
 				AnalysisType = "Proposed and Standard"
 				StandardsVersion = "' + standardVersion + '"
 				AnalysisReport = "Building Summary (csv)"
@@ -1598,25 +1599,51 @@ def outCBECCdata (user_input)
 	end
 end #outCBECCdata
 
-def show_dialog
-	# dlg = UI::WebDialog.new("Title", scrollable, pref key, width, height, x, y, resizeable);
-  dlg = UI::WebDialog.new("DialogTest", false, "DialogTest", 200, 150, 150, 150, true);
-  html = <<-HTML
-	 <form>
-	<input id="start2" onClick="window.alert('alert from javascript');" type="button" size="100" value="input">	 
-	</br>
-	<a href="skp:ruby_messagebox@from link">link</a>
-	 </form>
-  HTML
-  
-  dlg.set_html html
-  dlg.add_action_callback("ruby_messagebox") {|dialog, params|
-	 UI.messagebox("You called ruby_messagebox with: " + params.to_s)
-  }
-  dlg.show
+def self.create_dialog
+	options = {
+	  :dialog_title => "Export to CBECC-Res",
+	  :preferences_key => "example.htmldialog.materialinspector",
+	  :scrollable => true,
+	  :resizable => false,
+	  :width => 1200,
+	  :height => 850,
+	  :style => UI::HtmlDialog::STYLE_DIALOG
+	}
+	dialog = UI::HtmlDialog.new(options)
+	dialog.center
+	dialog
+	end
+
+	def self.show_dialog
+	if @dialog && @dialog.visible?
+	  @dialog.bring_to_front
+	else
+	  @dialog ||= self.create_dialog
+	  @dialog.add_action_callback('poke') { |action_context, ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight|
+	    self.on_poke(ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight)
+	    nil
+	  }
+	  @dialog.set_file(File.dirname(__FILE__) + '/project_info_form.html') #set_html(html)
+	  @dialog.show
+	end
 end
 
-
+def self.on_poke(ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight)
+  puts "Poke #{ruleset}!"
+  puts "Poke #{planname}!"
+  puts "Poke #{address}!"
+  puts "Poke #{citystate}!"
+  puts "Poke #{zipcode}!"
+  puts "Poke #{climatezone}!"
+  puts "Poke #{totalsf}!"
+  puts "Poke #{bedroomcount}!"
+  puts "Poke #{storycount}!"
+  puts "Poke #{ceilingheight}!"
+  puts "Sent to outCBECCdata"
+  input = [ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight]
+  outCBECCdata(input)
+  @dialog.close
+end
 
 
 def drillDown(ent)
@@ -1639,14 +1666,15 @@ def getMaterialData(model1)
 		if @mats.empty?
 			UI.messagebox 'Select objects with faces'
 		else
-			ruleSetList = "CA Res 2013|CA Res 2016"
-			czList = "CZ1  (Arcata)|CZ2  (Santa Rosa)|CZ3  (Oakland)|CZ4  (San Jose)|CZ5  (Santa Maria)|CZ6  (Torrance)|CZ7  (San Diego)|CZ8  (Fullerton)|CZ9  (Burbank)|CZ10  (Riverside)|CZ11  (Red Bluff)|CZ12  (Sacramento)|CZ13  (Fresno)|CZ 14  (Palmdale)|CZ15  (Palm Springs)|CZ16  (Blue Canyon)"
+			#ruleSetList = "CA Res 2013|CA Res 2016"
+			#czList = "CZ1  (Arcata)|CZ2  (Santa Rosa)|CZ3  (Oakland)|CZ4  (San Jose)|CZ5  (Santa Maria)|CZ6  (Torrance)|CZ7  (San Diego)|CZ8  (Fullerton)|CZ9  (Burbank)|CZ10  (Riverside)|CZ11  (Red Bluff)|CZ12  (Sacramento)|CZ13  (Fresno)|CZ 14  (Palmdale)|CZ15  (Palm Springs)|CZ16  (Blue Canyon)"
 			
-			prompts = ["Ruleset:", "Plan Name:", "Address:", "City, State:", "Zip Code:", "Climate Zone:", "Total SF:",  "# of Bedrooms:", "# of Stories:", "Avg Ceiling Height:"]
- 			defaults = ["CA Res 2013", "Plan Name", "Project Name", "City, State", "95366", "CZ12  (Sacramento)", "1000", "3", "1", "9"]
- 			list = [ruleSetList, "", "", "", "", czList, "", "", "1|2|3", ""]
- 			input = UI.inputbox(prompts, defaults, list, "Project Setup")
-			outCBECCdata(input)
+			#prompts = ["Ruleset:", "Plan Name:", "Address:", "City, State:", "Zip Code:", "Climate Zone:", "Total SF:",  "# of Bedrooms:", "# of Stories:", "Avg Ceiling Height:"]
+ 			#defaults = ["CA Res 2013", "Plan Name", "Project Name", "City, State", "95366", "CZ12  (Sacramento)", "1000", "3", "1", "9"]
+ 			#list = [ruleSetList, "", "", "", "", czList, "", "", "1|2|3", ""]
+ 			self.show_dialog
+ 			#input = UI.inputbox(prompts, defaults, list, "Project Setup")
+			#outCBECCdata(input)
 		end #if
 	end #if
 end # getMaterialData
