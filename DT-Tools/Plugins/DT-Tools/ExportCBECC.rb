@@ -451,10 +451,10 @@ def outCBECCdata (project_info, scenario_options)
 	puts filepath
 	if (RUBY_PLATFORM.downcase =~ /darwin/) == nil
 		#Windows Machine
-		savelocation = File.join(File.dirname( filepath ), File.basename(filepath, '.skp') + filetype).gsub(%r{/}) { "\\" }
+		savelocation = File.join(File.dirname( filepath ), scenario_options['RunTitle'] + filetype).gsub(%r{/}) { "\\" }
 	else
 		#not windows, so we dont need to convert file path delimiters
-		savelocation = File.join(File.dirname( filepath ), File.basename(filepath, '.skp') + filetype)
+		savelocation = File.join(File.dirname( filepath ), scenario_options['RunTitle'] + filetype)
 	end
 	puts savelocation
 	out_file = File.new(savelocation, "w")
@@ -495,7 +495,7 @@ def outCBECCdata (project_info, scenario_options)
 		#continue default file stuff
 			out_file.puts('  
 				SimSpeedOption = "Compliance"
-				DesignRatingCalcs = 0
+				DesignRatingCalcs = 1
 				DRtgLtgCredit = 0
 				DRtgLtgReduction = 0
 				CAHPProgram = "California Advanced Homes Program Single Family (CAHP)"
@@ -518,7 +518,7 @@ def outCBECCdata (project_info, scenario_options)
 				IsVerified = 0
 				IsAddAlone = 0
 				AlterIncl2Categs = 0
-				InsulConsQuality = "Standard"
+				InsulConsQuality = "' + scenario_options['InsulConsQuality'] + '"
 				NumBedrooms = ' + project_info[7] + '
 				NumAddBedrooms = 0
 				AllOrientations = 1
@@ -1396,8 +1396,8 @@ def outCBECCdata (project_info, scenario_options)
 	
 			WindowType	"win_Oper"  
 				SpecMethod = "Overall Window Area"
-				NFRCUfactor = 0.32
-				NFRCSHGC = 0.25
+				NFRCUfactor = ' + scenario_options['win_oper_uf'].to_s + '
+				NFRCSHGC = ' + scenario_options['win_oper_shgc'].to_s + '
 				ExteriorShade = "Insect Screen (default)"
 				ModelFinsOverhang = 0
 				OverhangDepth = 0
@@ -1417,8 +1417,8 @@ def outCBECCdata (project_info, scenario_options)
 
 			 WindowType	"win_Fixed"  
 				SpecMethod = "Overall Window Area"
-				NFRCUfactor = 0.32
-				NFRCSHGC = 0.25
+				NFRCUfactor = ' + scenario_options['win_fx_uf'].to_s + '
+				NFRCSHGC = ' + scenario_options['win_fx_shgc'].to_s + '
 				ExteriorShade = "Insect Screen (default)"
 				ModelFinsOverhang = 0
 				OverhangDepth = 0
@@ -1438,8 +1438,8 @@ def outCBECCdata (project_info, scenario_options)
 
 			WindowType	"win_SGD"  
 				SpecMethod = "Overall Window Area"
-				NFRCUfactor = 0.32
-				NFRCSHGC = 0.25
+				NFRCUfactor = ' + scenario_options['win_sgd_uf'].to_s + '
+				NFRCSHGC = ' + scenario_options['win_sgd_shgc'].to_s + '
 				ExteriorShade = "Insect Screen (default)"
 				ModelFinsOverhang = 0
 				OverhangDepth = 0
@@ -1459,8 +1459,8 @@ def outCBECCdata (project_info, scenario_options)
 
 			WindowType	"win_FRD"  
 				SpecMethod = "Overall Window Area"
-				NFRCUfactor = 0.32
-				NFRCSHGC = 0.25
+				NFRCUfactor = ' + scenario_options['win_frd_uf'].to_s + '
+				NFRCSHGC = ' + scenario_options['win_frd_shgc'].to_s + '
 				ExteriorShade = "Insect Screen (default)"
 				ModelFinsOverhang = 0
 				OverhangDepth = 0
@@ -1607,17 +1607,10 @@ def outCBECCdata (project_info, scenario_options)
 	
 	if File.file? (savelocation)
 
-		result = UI.messagebox('File saved!' + "\n" + "\n" + 'Ready Open in CBECC!', MB_OK)
-		puts "File Saved"
-		if result == IDYES
-			#file_to_open = '"C:/Program Files (x86)/CBECC-Res 2013/CBECC-Res13.exe -pa -nogui" "'.gsub(%r{/}) { "\\" } + savelocation +'"'
-			#puts "Opening File: " + file_to_open
-			#system %{cmd /c "start #{file_to_open}"}
-			myVariable = show_dialog.get_element_value("start2")
-			puts myVariable
-		end
+		result = UI.messagebox('File saved!' + "\n" + "\n" + 'Ready Open in CBECC!' + "\n" + savelocation, MB_OK)
+		puts "File Saved: " + savelocation
 	else
-		UI.messagebox('Error Saving File!')
+		UI.messagebox('Error Saving File: ' + savelocation)
 	end
 end #outCBECCdata
 
@@ -1646,7 +1639,11 @@ def self.show_dialog
 	    self.on_poke(project_info, scenario_options)
 	    nil
 	  }
-	  @dialog.set_file(File.dirname(__FILE__) + '/project_info_form.html') #set_html(html)
+	  @dialog.add_action_callback('closeMe') { |action_context|
+	    @dialog.close
+	    nil
+	  }
+	  @dialog.set_file(File.dirname(__FILE__) + '/project_info_form - stacked.html') #set_html(html)
 	  puts "Poke self.show_dialog!"
 	  @dialog.show
 	end
@@ -1681,15 +1678,7 @@ def getMaterialData(model1)
 		if @mats.empty?
 			UI.messagebox 'Select objects with faces'
 		else
-			#ruleSetList = "CA Res 2013|CA Res 2016"
-			#czList = "CZ1  (Arcata)|CZ2  (Santa Rosa)|CZ3  (Oakland)|CZ4  (San Jose)|CZ5  (Santa Maria)|CZ6  (Torrance)|CZ7  (San Diego)|CZ8  (Fullerton)|CZ9  (Burbank)|CZ10  (Riverside)|CZ11  (Red Bluff)|CZ12  (Sacramento)|CZ13  (Fresno)|CZ 14  (Palmdale)|CZ15  (Palm Springs)|CZ16  (Blue Canyon)"
-			
-			#prompts = ["Ruleset:", "Plan Name:", "Address:", "City, State:", "Zip Code:", "Climate Zone:", "Total SF:",  "# of Bedrooms:", "# of Stories:", "Avg Ceiling Height:"]
- 			#defaults = ["CA Res 2013", "Plan Name", "Project Name", "City, State", "95366", "CZ12  (Sacramento)", "1000", "3", "1", "9"]
- 			#list = [ruleSetList, "", "", "", "", czList, "", "", "1|2|3", ""]
  			self.show_dialog
- 			#input = UI.inputbox(prompts, defaults, list, "Project Setup")
-			#outCBECCdata(input)
 		end #if
 	end #if
 end # getMaterialData

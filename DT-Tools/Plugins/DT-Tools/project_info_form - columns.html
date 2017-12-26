@@ -1,0 +1,943 @@
+  <head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <form>
+        <h1>Project Information</h1>
+        <div class="form-row">
+            <label for="basic-url">Ruleset</label>
+            <div class="form-group col-md-12">
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" id="ruleset_13" name="ruleset" value="CA Res 2013"> 2013 Code
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" id="ruleset_16" name="ruleset" value="CA Res 2016" checked> 2016 Code
+              </label>
+            </div>
+            <div class="form-check form-check-inline disabled">
+              <label class="form-check-label">
+                <input class="form-check-input" type="radio" id="ruleset_19" name="ruleset" value="CA Res 2019" disabled> 2019 Code
+              </label>
+            </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="planname">Plan Name</label>
+              <input type="text" class="form-control" id="planname" value="Plan Name">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="Address">Address</label>
+              <input type="text" class="form-control" id="address" value="Project/Tract Name">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="citystate">City, State</label>
+              <input type="text" class="form-control" id="citystate" value="City, State">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="zipcode">Zipcode</label>
+              <input type="text" class="form-control" id="zipcode" value="95366">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="climatezone">Climate Zone</label>
+              <select class="form-control" id="climatezone">
+                <option value="CZ1  (Arcata)">CZ1  (Arcata)</option>
+                <option value="CZ2  (Santa Rosa)">CZ2  (Santa Rosa)</option>
+                <option value="CZ3  (Oakland)">CZ3  (Oakland)</option>
+                <option value="CZ4  (San Jose)">CZ4  (San Jose)</option>
+                <option value="CZ5  (Santa Maria)">CZ5  (Santa Maria)</option>
+                <option value="CZ6  (Torrance)">CZ6  (Torrance)</option>
+                <option value="CZ7  (San Diego)">CZ7  (San Diego)</option>
+                <option value="CZ8  (Fullerton)">CZ8  (Fullerton)</option>
+                <option value="CZ9  (Burbank)">CZ9  (Burbank)</option>
+                <option value="CZ10  (Riverside)">CZ10  (Riverside)</option>
+                <option value="CZ11  (Red Bluff)">CZ11  (Red Bluff)</option>
+                <option value="CZ12  (Sacramento)" selected>CZ12  (Sacramento)</option>
+                <option value="CZ13  (Fresno)">CZ13  (Fresno)</option>
+                <option value="CZ14  (Palmdale)">CZ14  (Palmdale)</option>
+                <option value="CZ15  (Palm Springs)">CZ15  (Palm Springs)</option>
+                <option value="CZ16  (Blue Canyon)">CZ16  (Blue Canyon)</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="totalsf">Total SF</label>
+              <input type="text" class="form-control" id="totalsf" value="1000">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="bedroomcount">Bedroom Count</label>
+              <input type="text" class="form-control" id="bedroomcount" value="3">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="storycount">Story Count</label>
+              <select class="form-control" id="storycount">
+                <option value="1" selected>1 Story</option>
+                <option value="2">2 Stories</option>
+                <option value="3">3 Stories</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label for="ceilingheight">Avg Ceiling Height</label>
+              <input type="text" class="form-control" id="ceilingheight" value="9">
+            </div>
+        </div>
+
+        <!-- 3 columns for scenarios options -->
+        <h1>Scenarios</h1>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="scenario1" checked> Scenario 1
+                    </label>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="scenario1_label">Scenario 1 Label</label>
+                    <input type="text" class="form-control" id="scenario1_label" value="v1">
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario1_roofingtype">Roofing</label>
+                      <select class="form-control" id="scenario1_roofingtype">
+                        <option value="Asphalt" selected>Asphalt</option>
+                        <option value="Tile">Tile</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario1_roofingpitch">Roof Pitch</label>
+                      <select class="form-control" id="scenario1_roofingpitch">
+                        <option value="0">Flat</option>
+                        <option value="2">2/12</option>
+                        <option value="3">3/12</option>
+                        <option value="4">4/12</option>
+                        <option value="5" selected>5/12</option>
+                        <option value="6">6/12</option>
+                        <option value="7">7/12</option>
+                        <option value="8">8/12</option>
+                        <option value="9">9/12</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="scenario1_attic">Attic Options</label>
+                    <select class="form-control" id="scenario1_attic">
+                      <option value="Standard Vented" selected>Standard Vented</option>
+                      <option value="HPA-A">HPA - Above Deck</option>
+                      <option value="HPA-B">HPA - Below Deck</option>
+                      <option value="UVA">Unvented Attic</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_foam">Foam</label>
+                      <select class="form-control" id="scenario1_foam">
+                        <option value="none" selected>None</option>
+                        <option value="R4">R 4</option>
+                        <option value="R5">R 5</option>
+                        <option value="R6">R 6</option>
+                        <option value="R8">R 8</option>
+                        <option value="R10">R 10</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_2x4">2x4 Cavities</label>
+                      <select class="form-control" id="scenario1_2x4">
+                        <option value="R 13" selected>R 13</option>
+                        <option value="R 15">R 15</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_2x6">2x6 Cavities</label>
+                      <select class="form-control" id="scenario1_2x6">
+                        <option value="R 19" selected>R 19</option>
+                        <option value="R 21">R 21</option>
+                        <option value="R 23">R 23</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_qii" > QII Inspection
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario1_hvactype">HVAC Type</label>
+                      <select class="form-control" id="scenario1_hvactype">
+                        <option value="Furnace" selected>Gas Furnace</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario1_ducts">Ducts</label>
+                      <select class="form-control" id="scenario1_ducts">
+                        <option value="6.0" selected>R 6</option>
+                        <option value="8.0">R 8</option>
+                        <option value="10.0">R 10</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_heatingeff">Heating Eff</label>
+                      <input type="text" class="form-control" id="scenario1_heatingeff" value="80">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_seer">SEER</label>
+                      <input type="text" class="form-control" id="scenario1_seer" value="14">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_eer">EER</label>
+                      <input type="text" class="form-control" id="scenario1_eer" value="12.2">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_ecm" > ECM
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_llah" > LLAH
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_zoned" > Zoned
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_whf" > WHF
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario1_rcm" > RCM
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_dwh">DWH Type</label>
+                      <select class="form-control" id="scenario1_dwh">
+                        <option value="Tankless" selected>Tankless</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                        <option value="Gas Storage">Gas Storage</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_ef">EF Rating</label>
+                      <input type="text" class="form-control" id="scenario1_ef" value=".82">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario1_btuh">btuh</label>
+                      <input type="text" class="form-control" id="scenario1_btuh" value="19900">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-5">
+                      <label>U-Value</label>
+                    </div>
+                    <div class="col-sm-5">
+                      <label>SHGC</label>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Oper</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_operUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_operSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Fixed</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_fxUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_fxSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">SGD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_sgdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_sgdSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">FRD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_frdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario1_frdSHGC" value="0.25">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="scenario1" checked> Scenario 2
+                    </label>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="scenario2_label">Scenario 2 Label</label>
+                    <input type="text" class="form-control" id="scenario2_label" value="v2">
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario2_roofingtype">Roofing</label>
+                      <select class="form-control" id="scenario2_roofingtype">
+                        <option value="Asphalt" selected>Asphalt</option>
+                        <option value="Tile">Tile</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario2_roofingpitch">Roof Pitch</label>
+                      <select class="form-control" id="scenario2_roofingpitch">
+                        <option value="0">Flat</option>
+                        <option value="2">2/12</option>
+                        <option value="3">3/12</option>
+                        <option value="4">4/12</option>
+                        <option value="5" selected>5/12</option>
+                        <option value="6">6/12</option>
+                        <option value="7">7/12</option>
+                        <option value="8">8/12</option>
+                        <option value="9">9/12</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="scenario2_attic">Attic Options</label>
+                    <select class="form-control" id="scenario2_attic">
+                      <option value="Standard Vented" selected>Standard Vented</option>
+                      <option value="HPA-A">HPA - Above Deck</option>
+                      <option value="HPA-B">HPA - Below Deck</option>
+                      <option value="UVA">Unvented Attic</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_foam">Foam</label>
+                      <select class="form-control" id="scenario2_foam">
+                        <option value="none" selected>None</option>
+                        <option value="R4">R 4</option>
+                        <option value="R5">R 5</option>
+                        <option value="R6">R 6</option>
+                        <option value="R8">R 8</option>
+                        <option value="R10">R 10</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_2x4">2x4 Cavities</label>
+                      <select class="form-control" id="scenario2_2x4">
+                        <option value="R 13" selected>R 13</option>
+                        <option value="R 15">R 15</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_2x6">2x6 Cavities</label>
+                      <select class="form-control" id="scenario2_2x6">
+                        <option value="R 19" selected>R 19</option>
+                        <option value="R 21">R 21</option>
+                        <option value="R 23">R 23</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_qii" > QII Inspection
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario2_hvactype">HVAC Type</label>
+                      <select class="form-control" id="scenario2_hvactype">
+                        <option value="Furnace" selected>Gas Furnace</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario2_ducts">Ducts</label>
+                      <select class="form-control" id="scenario2_ducts">
+                        <option value="6.0" selected>R 6</option>
+                        <option value="8.0">R 8</option>
+                        <option value="10.0">R 10</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_heatingeff">Heating Eff</label>
+                      <input type="text" class="form-control" id="scenario2_heatingeff" value="80">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_seer">SEER</label>
+                      <input type="text" class="form-control" id="scenario2_seer" value="14">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_eer">EER</label>
+                      <input type="text" class="form-control" id="scenario2_eer" value="12.2">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_ecm" > ECM
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_llah" > LLAH
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_zoned" > Zoned
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_whf" > WHF
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario2_rcm" > RCM
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_dwh">DWH Type</label>
+                      <select class="form-control" id="scenario2_dwh">
+                        <option value="Tankless" selected>Tankless</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                        <option value="Gas Storage">Gas Storage</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_ef">EF Rating</label>
+                      <input type="text" class="form-control" id="scenario2_ef" value=".82">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario2_btuh">btuh</label>
+                      <input type="text" class="form-control" id="scenario2_btuh" value="19900">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-5">
+                      <label>U-Value</label>
+                    </div>
+                    <div class="col-sm-5">
+                      <label>SHGC</label>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Oper</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_operUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_operSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Fixed</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_fxUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_fxSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">SGD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_sgdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_sgdSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">FRD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_frdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario2_frdSHGC" value="0.25">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" id="scenario3" checked> Scenario 3
+                    </label>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="scenario3_label">Scenario 1 Label</label>
+                    <input type="text" class="form-control" id="scenario3_label" value="v3">
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario3_roofingtype">Roofing</label>
+                      <select class="form-control" id="scenario3_roofingtype">
+                        <option value="Asphalt" selected>Asphalt</option>
+                        <option value="Tile">Tile</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario3_roofingpitch">Roof Pitch</label>
+                      <select class="form-control" id="scenario3_roofingpitch">
+                        <option value="0">Flat</option>
+                        <option value="2">2/12</option>
+                        <option value="3">3/12</option>
+                        <option value="4">4/12</option>
+                        <option value="5" selected>5/12</option>
+                        <option value="6">6/12</option>
+                        <option value="7">7/12</option>
+                        <option value="8">8/12</option>
+                        <option value="9">9/12</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="scenario3_attic">Attic Options</label>
+                    <select class="form-control" id="scenario3_attic">
+                      <option value="Standard Vented" selected>Standard Vented</option>
+                      <option value="HPA-A">HPA - Above Deck</option>
+                      <option value="HPA-B">HPA - Below Deck</option>
+                      <option value="UVA">Unvented Attic</option>
+                    </select>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_foam">Foam</label>
+                      <select class="form-control" id="scenario3_foam">
+                        <option value="none" selected>None</option>
+                        <option value="R4">R 4</option>
+                        <option value="R5">R 5</option>
+                        <option value="R6">R 6</option>
+                        <option value="R8">R 8</option>
+                        <option value="R10">R 10</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_2x4">2x4 Cavities</label>
+                      <select class="form-control" id="scenario3_2x4">
+                        <option value="R 13" selected>R 13</option>
+                        <option value="R 15">R 15</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_2x6">2x6 Cavities</label>
+                      <select class="form-control" id="scenario3_2x6">
+                        <option value="R 19" selected>R 19</option>
+                        <option value="R 21">R 21</option>
+                        <option value="R 23">R 23</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_qii" > QII Inspection
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="scenario3_hvactype">HVAC Type</label>
+                      <select class="form-control" id="scenario3_hvactype">
+                        <option value="Furnace" selected>Gas Furnace</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="scenario3_ducts">Ducts</label>
+                      <select class="form-control" id="scenario3_ducts">
+                        <option value="6.0" selected>R 6</option>
+                        <option value="8.0">R 8</option>
+                        <option value="10.0">R 10</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_heatingeff">Heating Eff</label>
+                      <input type="text" class="form-control" id="scenario3_heatingeff" value="80">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_seer">SEER</label>
+                      <input type="text" class="form-control" id="scenario3_seer" value="14">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_eer">EER</label>
+                      <input type="text" class="form-control" id="scenario3_eer" value="12.2">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_ecm" > ECM
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_llah" > LLAH
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_zoned" > Zoned
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_whf" > WHF
+                      </label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" id="scenario3_rcm" > RCM
+                      </label>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_dwh">DWH Type</label>
+                      <select class="form-control" id="scenario3_dwh">
+                        <option value="Tankless" selected>Tankless</option>
+                        <option value="Heat Pump">Heat Pump</option>
+                        <option value="Gas Storage">Gas Storage</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_ef">EF Rating</label>
+                      <input type="text" class="form-control" id="scenario3_ef" value=".82">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="scenario3_btuh">btuh</label>
+                      <input type="text" class="form-control" id="scenario3_btuh" value="19900">
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-5">
+                      <label>U-Value</label>
+                    </div>
+                    <div class="col-sm-5">
+                      <label>SHGC</label>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Oper</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_operUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_operSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">Fixed</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_fxUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_fxSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">SGD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_sgdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_sgdSHGC" value="0.25">
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label class="col-sm-2 col-form-label">FRD</label>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_frdUF" value="0.32">
+                    </div>
+                    <div class="col-sm-5">
+                      <input type="text" class="form-control" id="scenario3_frdSHGC" value="0.25">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="run_scenarios()">Create File(s)</button>
+        <button class="btn btn-secondary" onclick="close_window()">Close</button>
+      </form>
+    </div>
+
+    <script>
+      function close_window(){
+
+            sketchup.closeMe();
+
+      }
+
+      function run_scenarios(){
+        var info = get_project_info();
+        var selection = true;
+        // alert (info);
+        if (document.getElementById("scenario1").checked) {
+            var options = get_scenario_info("scenario1");
+            sketchup.poke(info, options);
+            selection = false;
+        }
+        if (document.getElementById("scenario2").checked) {
+            var options = get_scenario_info("scenario2");
+            sketchup.poke(info, options);
+            selection = false;
+        }
+        if (document.getElementById("scenario3").checked) {
+            var options = get_scenario_info("scenario3");
+            sketchup.poke(info, options);
+            selection = false;
+        }
+        if (selection) {
+            alert ("No Scenario Selected");
+        }
+
+      }
+
+      function get_project_info() {
+        var radios = document.getElementsByName('ruleset');
+ 
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                // do whatever you want with the checked radio
+                var ruleset = radios[i].value;
+                // only one radio can be logically checked, don't check the rest
+                break;
+            }
+        }
+        var project_info = [ruleset, document.getElementById("planname").value, document.getElementById("address").value, document.getElementById("citystate").value, document.getElementById("zipcode").value, document.getElementById("climatezone").value, document.getElementById("totalsf").value, document.getElementById("bedroomcount").value, document.getElementById("storycount").value, document.getElementById("ceilingheight").value];
+        return project_info;
+
+      }
+
+      function get_scenario_info(scenario){
+        var scenario_options = {};
+        scenario_options['RunTitle'] = document.getElementById("planname").value + " - " + document.getElementById(scenario + "_label").value;
+          
+          switch (document.getElementById(scenario + "_roofingtype").value) {
+            case "Asphalt":
+              scenario_options['RoofingLayer'] = "Light Roof (Asphalt Shingle)";
+              scenario_options['RoofingType'] = "all others";
+              break;
+            case "Tile":
+              scenario_options['RoofingLayer'] = "10 PSF (RoofTile)";
+              scenario_options['RoofingType'] = "Steep Slope Roof tile, metal tile, or wood shakes";
+              break;
+          }
+
+          scenario_options['RoofRise'] = document.getElementById(scenario + "_roofingpitch").value;
+
+          switch (document.getElementById(scenario + "_attic").value) {
+            case "Standard Vented":
+              scenario_options['AtticType'] = "Ventilated";
+              scenario_options['CeilingCavityLayer'] = "R 38";
+              scenario_options['RadiantBarrier'] = 1;
+              scenario_options['RoofDeckCavityLayer'] = "- no insulation -";
+              scenario_options['AbvDeckInsulLayer'] = "- no insulation -";
+              break;
+            case "HPA-A":
+              scenario_options['AtticType'] = "Ventilated";
+              scenario_options['CeilingCavityLayer'] = "R 38";
+              scenario_options['RadiantBarrier'] = 1;
+              scenario_options['RoofDeckCavityLayer'] = "- no insulation -";
+              scenario_options['AbvDeckInsulLayer'] = "R6 Sheathing";
+              break;
+            case "HPA-B":
+              scenario_options['AtticType'] = "Ventilated";
+              scenario_options['CeilingCavityLayer'] = "R 38";
+              scenario_options['RadiantBarrier'] = 0;
+              scenario_options['RoofDeckCavityLayer'] = "R 13";
+              scenario_options['AbvDeckInsulLayer'] = "- no insulation -";
+              break;
+            case "UVA":
+              scenario_options['AtticType'] = "Unventilated";
+              scenario_options['CeilingCavityLayer'] = "- no insulation -";
+              scenario_options['RadiantBarrier'] = 0;
+              scenario_options['RoofDeckCavityLayer'] = "R 30";
+              scenario_options['AbvDeckInsulLayer'] = "- no insulation -";
+              break;
+          }
+          
+          switch (document.getElementById(scenario + "_foam").value) {
+            case "none":
+              scenario_options['WallExtFinishLayer'] = "3 Coat Stucco";
+              scenario_options['SheathInsulLayer'] = "- no sheathing/insul. -";
+              break;
+            default:
+              scenario_options['WallExtFinishLayer'] = "Synthetic Stucco";
+              scenario_options['SheathInsulLayer'] = document.getElementById(scenario + "_foam").value + ' Sheathing';
+              break;
+          }
+
+          scenario_options['CavityLayer2x4'] = document.getElementById(scenario + "_2x4").value;
+          scenario_options['CavityLayer2x6'] = document.getElementById(scenario + "_2x6").value;
+          if (document.getElementById(scenario + "_qii").checked) {
+            scenario_options['InsulConsQuality'] = "Improved";
+          } else{
+            scenario_options['InsulConsQuality'] = "Standard";
+          }
+
+          switch (document.getElementById(scenario + "_hvactype").value) {
+            case "Furnace":
+              scenario_options['HVACSys_type'] = "Other Heating and Cooling System";
+              scenario_options['HVACSys_NumHeatSystemTypes'] = 1;
+              scenario_options['HVACSys_NumCoolSystemTypes'] = 1;
+              scenario_options['HVACSys_NumHtPumpSystemTypes'] = 0;
+              scenario_options['HVACSys_AutoSizeHeatInp'] = 1;
+              scenario_options['HVACSys_HtPumpDucted'] = 0;
+              scenario_options['HVACSys_HeatSystem'] = 'HeatSystem[1] = "Heating System 1"';
+              scenario_options['HVACSys_CoolSystem'] = 'CoolSystem[1] = "Cooling System 1"';
+              scenario_options['HVACSys_HtPumpSystem'] = '';
+              break;
+            case "Heat Pump":
+              scenario_options['HVACSys_type'] = "Heat Pump Heating and Cooling System";
+              scenario_options['HVACSys_NumHeatSystemTypes'] = 0;
+              scenario_options['HVACSys_NumCoolSystemTypes'] = 0;
+              scenario_options['HVACSys_NumHtPumpSystemTypes'] = 1;
+              scenario_options['HVACSys_AutoSizeHeatInp'] = 0;
+              scenario_options['HVACSys_HtPumpDucted'] = 1;
+              scenario_options['HVACSys_HeatSystem'] = '';
+              scenario_options['HVACSys_CoolSystem'] = '';
+              scenario_options['HVACSys_HtPumpSystem'] = 'HtPumpSystem[1] = "Heat Pump System 1"';
+              break;
+          }
+          scenario_options['HVACHeat_EFF'] = document.getElementById(scenario + "_heatingeff").value;
+          scenario_options['HVACCool_SEER'] = document.getElementById(scenario + "_seer").value;
+          scenario_options['HVACCool_EER'] = document.getElementById(scenario + "_eer").value;
+          scenario_options['HVACHtPump_Cap47'] = 24000;
+          scenario_options['HVACHtPump_Cap17'] = 17000;
+          if (document.getElementById(scenario + "_zoned").checked) {
+            scenario_options['HVACCool_CFMperTon'] = 275;
+            scenario_options['HVAC_IsZonal'] = 1;
+          } else{
+            scenario_options['HVACCool_CFMperTon'] = 350;
+            scenario_options['HVAC_IsZonal'] = 0;
+          }
+          if (document.getElementById(scenario + "_rcm").checked) {
+            scenario_options['HVACCool_ACCharge'] = "Verified";
+          } else{
+            scenario_options['HVACCool_ACCharge'] = "Not Verified";
+          }
+          scenario_options['HVACDist_DuctInsRvalOpt'] = document.getElementById(scenario + "_ducts").value;
+
+          if (document.getElementById(scenario + "_llah").checked) {
+            scenario_options['HVACDist_LowLkgAH'] = 1;
+          } else {
+            scenario_options['HVACDist_LowLkgAH'] = 0;
+          }
+
+          if (document.getElementById(scenario + "_ecm").checked) {
+            scenario_options['HVACFan_WperCFMCool'] = 0.45;
+          } else {
+            scenario_options['HVACFan_WperCFMCool'] = 0.58;
+          }
+          
+          if (document.getElementById(scenario + "_whf").checked) {
+            scenario_options['UnitClVentOption'] = "Default Prescriptive Whole House Fan"
+          } else {
+            scenario_options['UnitClVentOption'] = "- none -"
+          }
+          
+          switch (document.getElementById(scenario + "_dwh").value) {
+            case "Tankless":
+              scenario_options['DHWHeater_HeaterElementType'] = "Gas";
+              scenario_options['DHWHeater_TankType'] = "Small Instantaneous";
+              scenario_options['DHWHeater_TankVolume'] = 0;
+              scenario_options['DHWHeater_EnergyFactor'] = document.getElementById(scenario + "_ef").value;
+              scenario_options['DHWHeater_InputRating'] = document.getElementById(scenario + "_btuh").value;
+              break;
+            case "Storage":
+              scenario_options['DHWHeater_HeaterElementType'] = "Gas";
+              scenario_options['DHWHeater_TankType'] = "Small Storage";
+              scenario_options['DHWHeater_TankVolume'] = 50;
+              scenario_options['DHWHeater_EnergyFactor'] = document.getElementById(scenario + "_ef").value;
+              scenario_options['DHWHeater_InputRating'] = document.getElementById(scenario + "_btuh").value;
+              break;
+            case "Heat Pump":
+              scenario_options['DHWHeater_HeaterElementType'] = "Heat Pump";
+              scenario_options['DHWHeater_TankType'] = "Small Storage";
+              scenario_options['DHWHeater_TankVolume'] = 50;
+              scenario_options['DHWHeater_EnergyFactor'] = document.getElementById(scenario + "_ef").value;
+              scenario_options['DHWHeater_InputRating'] = 5000;
+              break;
+          }
+          
+          scenario_options['win_oper_uf'] = document.getElementById(scenario + "_operUF").value;
+          scenario_options['win_oper_shgc'] = document.getElementById(scenario + "_operSHGC").value;
+          scenario_options['win_fx_uf'] = document.getElementById(scenario + "_fxUF").value;
+          scenario_options['win_fx_shgc'] = document.getElementById(scenario + "_fxSHGC").value;
+          scenario_options['win_sgd_uf'] = document.getElementById(scenario + "_sgdUF").value;
+          scenario_options['win_sgd_shgc'] = document.getElementById(scenario + "_sgdSHGC").value;
+          scenario_options['win_frd_uf'] = document.getElementById(scenario + "_frdUF").value;
+          scenario_options['win_frd_shgc'] = document.getElementById(scenario + "_frdSHGC").value;
+        return scenario_options;
+
+      }
+    </script>
+  </body>
