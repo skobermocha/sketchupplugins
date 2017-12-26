@@ -109,7 +109,7 @@ def whatMaterial (face)
 
 		if front = face.material
 			mat_name = front.display_name
-			puts mat_name
+			#puts mat_name
 			case mat_name
 			when "win_Oper", "win_Fixed", "win_SGD", "win_FRD", "win_Door"
 				wallIn = orient + "_" + getWallFace(face)
@@ -163,9 +163,9 @@ def getWallFace(windowFace)
 				if wallFace.material != nil
 					case wallFace.material.display_name
 					when "win_Oper", "win_Fixed", "win_SGD", "win_FRD", "win_Door"
-						puts "win_wall: " + wallFace.material.display_name
+						#puts "win_wall: " + wallFace.material.display_name
 					else
-						puts "win_wall: " + wallFace.material.display_name
+						#puts "win_wall: " + wallFace.material.display_name
 						return wallFace.material.display_name
 					end
 					
@@ -358,7 +358,7 @@ end #round
 def getWindows(wallFace, wallOrient)
 	windows_out = ''
 	at = @windows.length() -1
-	puts wallOrient + '_' + wallFace
+	#puts wallOrient + '_' + wallFace
 	
 	#loop through windows and output the data for each window attached to the wallFace we are working with into our string variable
 	while at > -1
@@ -369,12 +369,12 @@ def getWindows(wallFace, wallOrient)
 				Door	"Door_' + at.to_s + '"  
 					Status = "New"
 					IsVerified = 0
-					Area = ' + round(@win_areas[at]/@area_divisor) +'
+					Area = ' + round(@win_areas[at] / @area_divisor) +'
 					Ufactor = 0.5
 					exUfactor = 0.5
 					..
 				'
-				puts "Door_" + at.to_s
+				#puts "Door_" + at.to_s
 			else
 				windows_out += '
 				Win	"Win_' + at.to_s + '"  
@@ -417,7 +417,7 @@ def getWindows(wallFace, wallOrient)
 					exRightFinBotUp = 0
 					..
 				'
-				puts "Win_" + at.to_s
+				#puts "Win_" + at.to_s
 			end #when
 		end
 		at -= 1
@@ -427,10 +427,10 @@ def getWindows(wallFace, wallOrient)
 	return windows_out
 end #getWindows
 
-def outCBECCdata (user_input)
+def outCBECCdata (project_info, scenario_options)
 	
 	#determine which CBECC version user has requested
-	case user_input[0] 
+	case project_info[0] 
 	when "CA Res 2013"
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
@@ -464,23 +464,23 @@ def outCBECCdata (user_input)
 		
 	####this is default file requirements
 		out_file.puts('
-			RulesetFilename	"' + user_input[0] + '.bin"
+			RulesetFilename	"' + project_info[0] + '.bin"
 
-			Proj	"' + user_input[1] + '"  
+			Proj	"' + project_info[1] + '"  
 				SoftwareVersion = "CBECC-Res 2013-4b (812)"
 				BEMVersion = 5
 				CreateDate = 1472056558
 				ModDate = 1472056726
-				RunTitle = "title"
+				RunTitle = "' + scenario_options['RunTitle'] + '"
 				AnalysisType = "Proposed and Standard"
 				StandardsVersion = "' + standardVersion + '"
 				AnalysisReport = "Building Summary (csv)"
 				ComplianceReportPDF = 1
 				ComplianceReportXML = 1
 			')
-
+			puts "Step 1"
 			#if user selected CBECC 2016 file, we need to inject this stuff too.
-			if user_input[0] == "CA Res 2016"
+			if project_info[0] == "CA Res 2016"
 				out_file.puts('
 				PVCompCredit = 0
 				PVWInputs = "Simplified"
@@ -490,8 +490,8 @@ def outCBECCdata (user_input)
 					PVWCalFlexInstall = ( 1, 1, 1, 1, 1 )
 					PVWArrayTiltInput = ( "deg", "deg", "deg", "deg", "deg" )
 					')
-				end	 
-
+			end	 
+			puts "Step 2"
 		#continue default file stuff
 			out_file.puts('  
 				SimSpeedOption = "Compliance"
@@ -503,11 +503,13 @@ def outCBECCdata (user_input)
 				IsCAHPNGasUtil = 1
 				IsCAHPDOEChalHome = 0
 				IsCAHPFutureCode = 0
-				ClimateZone = "' + user_input[5] + '"
-				Address = "' + user_input[2] + '"
-				ZipCode = ' + user_input[4] + '
+				Notes = ""
+   				Remarks = ""
+				ClimateZone = "' + project_info[5] + '"
+				Address = "' + project_info[2] + '"
+				ZipCode = ' + project_info[4] + '
 				RunScope = "Newly Constructed"
-				City = "' + user_input[3] + '"
+				City = "' + project_info[3] + '"
 				IsMultiFamily = 0
 				CentralMFamLaundry = 0
 				ZonalControl = 0
@@ -517,7 +519,7 @@ def outCBECCdata (user_input)
 				IsAddAlone = 0
 				AlterIncl2Categs = 0
 				InsulConsQuality = "Standard"
-				NumBedrooms = ' + user_input[7] + '
+				NumBedrooms = ' + project_info[7] + '
 				NumAddBedrooms = 0
 				AllOrientations = 1
 				FrontOrientation = 0
@@ -529,7 +531,7 @@ def outCBECCdata (user_input)
 				UnitIAQFanCnt2[1] = 1
 				UnitIAQFanCnt3[1] = 1
 				UnitIAQFanCnt4[1] = 1
-				UnitClVentOption = "- none -"
+				UnitClVentOption = "' + scenario_options['UnitClVentOption'] + '"
 				UnitClVentLowArea = 0
 				Appl_HaveRefrig[1] = 1
 				Appl_HaveDish[1] = 1
@@ -556,12 +558,13 @@ def outCBECCdata (user_input)
 				DHWSys2Verified = 0
 				WinHeadHeight = 7.67
 				Bottom = 0
-				FloorArea = ' + user_input[6] + '
-				NumStories = ' + user_input[8] + '
-				CeilingHeight = ' + user_input[9] + '
+				FloorArea = ' + project_info[6] + '
+				NumStories = ' + project_info[8] + '
+				CeilingHeight = ' + project_info[9] + '
 				..
 			')
-	### Defaults End	
+	### Defaults End
+			puts "Step 3 Defaults End"	
 
 	##### Living Area Zone Looping through faces and determine material painted on.
 		mat_out = ''
@@ -678,6 +681,7 @@ def outCBECCdata (user_input)
 						Area = ' + round(@areas[at]/@area_divisor) + '
 						..
 				')
+				puts "Step 4"
 			when 'CeilingBelowAttic'
 				##### Have to Create Attic Space first!!!!
 				out_file.puts('
@@ -690,41 +694,42 @@ def outCBECCdata (user_input)
 						..
 
 					Attic	"Attic_Living"  
-						Type = "Ventilated"
+						Type = "' + scenario_options['AtticType'] + '"
 						Status = "New"
 						IsVerified = 0
-						RoofRise = 5
+						RoofRise = ' + scenario_options['RoofRise'] + '
 						Construction = "Roof Deck"
 						RoofSolReflect = 0.1
 						RoofEmiss = 0.85
 						..
 					')
-				when 'CeilingCathedral'
-				out_file.puts('
-				CathedralCeiling	"' + mat_out + '"  
-						Status = "New"
-						RoofRise = 5
+				puts "Step 5"
+			when 'CeilingCathedral'
+			out_file.puts('
+			CathedralCeiling	"' + mat_out + '"  
+					Status = "New"
+					RoofRise = ' + scenario_options['RoofRise'] + '
 					Orientation = "Front"
 					OrientationValue = 0
 					Construction = "Cathedral"
 					RoofSolReflect = 0.1
 					RoofEmiss = 0.85
-						Area = ' + round(@areas[at]/@area_divisor) + '
-						..
-					')
-				when 'FloorToGarage'
-					out_file.puts('
-					InteriorFloor	"' + mat_out + '"  
-						Status = "New"
-						IsVerified = 0
-						Area = ' + round(@areas[at]/@area_divisor) + '
-						FloorZ = ' + user_input[9] + '
-						Construction = "Floor to Garage"
-						IsPartySurface = 0
-						OtherSideModeled = 0
-						Outside = "Garage"
-						..
-					')
+					Area = ' + round(@areas[at]/@area_divisor) + '
+					..
+				')
+			when 'FloorToGarage'
+				out_file.puts('
+				InteriorFloor	"' + mat_out + '"  
+					Status = "New"
+					IsVerified = 0
+					Area = ' + round(@areas[at]/@area_divisor) + '
+					FloorZ = ' + project_info[9] + '
+					Construction = "Floor to Garage"
+					IsPartySurface = 0
+					OtherSideModeled = 0
+					Outside = "Garage"
+					..
+				')
 			when 'FloorToOutside'
 				out_file.puts('
 					ExteriorFloor	"' + mat_out + '"  
@@ -732,7 +737,7 @@ def outCBECCdata (user_input)
 						Status = "New"
 						IsVerified = 0
 						Area = ' + round(@areas[at]/@area_divisor) + '
-						FloorZ = ' + user_input[9] + '
+						FloorZ = ' + project_info[9] + '
 						Construction = "Floor to Outside"
 						..
 					')
@@ -782,9 +787,9 @@ def outCBECCdata (user_input)
 			end
 		end #for
 	### Living Area End
-
+	puts "Step 6 Living Area End"
 	##### Garage Looping through faces and determine material painted on.
-		volume = user_input[9].to_i * @unconditioned.to_i
+		volume = project_info[9].to_i * @unconditioned.to_i
 		out_file.puts ('
 			Garage	"Garage"  
 				Area = ' + @unconditioned.to_s + '
@@ -844,7 +849,7 @@ def outCBECCdata (user_input)
 						Type = "Ventilated"
 						Status = "New"
 						IsVerified = 0
-						RoofRise = 5
+						RoofRise = ' + scenario_options['RoofRise'] + '
 						Construction = "Roof Deck at Garage"
 						RoofSolReflect = 0.1
 						RoofEmiss = 0.85
@@ -875,7 +880,7 @@ def outCBECCdata (user_input)
 			end
 		end #for
 	### Garage Area End
-
+	puts "Step 7 Garage End"
 
 	##### Adding Construction Types to the file #######
 		out_file.puts('
@@ -897,10 +902,10 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 13"
+				CavityLayer = "' + scenario_options['CavityLayer2x4'] + '"
 				FrameLayer = "2x4 @ 16 in. O.C."
-				SheathInsulLayer = "- no sheathing/insul. -"
-				WallExtFinishLayer = "3 Coat Stucco"
+				SheathInsulLayer = "' + scenario_options['SheathInsulLayer'] + '"
+				WallExtFinishLayer = "' + scenario_options['WallExtFinishLayer'] + '"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
 				RadiantBarrier = 0
@@ -927,10 +932,10 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 19"
+				CavityLayer = "' + scenario_options['CavityLayer2x6'] + '"
 				FrameLayer = "2x6 @ 16 in. O.C."
-				SheathInsulLayer = "- no sheathing/insul. -"
-				WallExtFinishLayer = "3 Coat Stucco"
+				SheathInsulLayer = "' + scenario_options['SheathInsulLayer'] + '"
+				WallExtFinishLayer = "' + scenario_options['WallExtFinishLayer'] + '"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
 				RadiantBarrier = 0
@@ -957,7 +962,7 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 13"
+				CavityLayer = "' + scenario_options['CavityLayer2x4'] + '"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "Wood Siding/sheathing/decking"
@@ -987,7 +992,7 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 19"
+				CavityLayer = "' + scenario_options['CavityLayer2x6'] + '"
 				FrameLayer = "2x6 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "Wood Siding/sheathing/decking"
@@ -1019,8 +1024,8 @@ def outCBECCdata (user_input)
 				FurringLayer = "- none -"
 				CavityLayer = "- no insulation -"
 				FrameLayer = "2x4 @ 16 in. O.C."
-				SheathInsulLayer = "- no sheathing/insul. -"
-				WallExtFinishLayer = "3 Coat Stucco"
+				SheathInsulLayer = "' + scenario_options['SheathInsulLayer'] + '"
+				WallExtFinishLayer = "' + scenario_options['WallExtFinishLayer'] + '"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
 				RadiantBarrier = 0
@@ -1077,7 +1082,7 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 13"
+				CavityLayer = "' + scenario_options['CavityLayer2x4'] + '"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
@@ -1107,7 +1112,7 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 19"
+				CavityLayer = "' + scenario_options['CavityLayer2x6'] + '"
 				FrameLayer = "2x6 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
@@ -1182,7 +1187,7 @@ def outCBECCdata (user_input)
 			Cons	"Ceiling"  
 				CanAssignTo = "Ceilings (below attic)"
 				Type = "Wood Framed Ceiling"
-				RoofingLayer = "Light Roof (Asphalt Shingle)"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
 				AbvDeckInsulLayer = "- no insulation -"
 				RoofDeckLayer = "Wood Siding/sheathing/decking"
 				InsideFinishLayer = "Gypsum Board"
@@ -1197,22 +1202,22 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 38"
+				CavityLayer = "' + scenario_options['CeilingCavityLayer'] + '"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
-				RadiantBarrier = 0
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
 				RaisedHeelTruss = 0
 				RaisedHeelTrussHeight = 3.5
-				RoofingType = "all others"
+				RoofingType = "' + scenario_options['RoofingType'] + '"
 				..
 
 			Cons	"Ceiling at Garage"  
 				CanAssignTo = "Ceilings (below attic)"
 				Type = "Wood Framed Ceiling"
-				RoofingLayer = "Light Roof (Asphalt Shingle)"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
 				AbvDeckInsulLayer = "- no insulation -"
 				RoofDeckLayer = "Wood Siding/sheathing/decking"
 				InsideFinishLayer = "Gypsum Board"
@@ -1233,17 +1238,17 @@ def outCBECCdata (user_input)
 				WallExtFinishLayer = "- select finish -"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
-				RadiantBarrier = 0
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
 				RaisedHeelTruss = 0
 				RaisedHeelTrussHeight = 3.5
-				RoofingType = "all others"
+				RoofingType = "' + scenario_options['RoofingType'] + '"
 				..
 
 			Cons	"Roof Deck"  
 				CanAssignTo = "Attic Roofs"
 				Type = "Wood Framed Ceiling"
-				RoofingLayer = "Light Roof (Asphalt Shingle)"
-				AbvDeckInsulLayer = "- no insulation -"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
+				AbvDeckInsulLayer = "' + scenario_options['AbvDeckInsulLayer'] + '"
 				RoofDeckLayer = "Wood Siding/sheathing/decking"
 				InsideFinishLayer = "- select inside finish -"
 				AtticFloorLayer = "- no attic floor -"
@@ -1257,23 +1262,23 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "- no insulation -"
+				CavityLayer = "' + scenario_options['RoofDeckCavityLayer'] + '"
 				FrameLayer = "2x4 Top Chord of Roof Truss @ 24 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
-				RadiantBarrier = 1
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
 				RaisedHeelTruss = 0
 				RaisedHeelTrussHeight = 3.5
-				RoofingType = "all others"
+				RoofingType = "' + scenario_options['RoofingType'] + '"
 				..	
 
 			Cons	"Roof Deck at Garage"  
 				CanAssignTo = "Attic Roofs"
 				Type = "Wood Framed Ceiling"
-				RoofingLayer = "Light Roof (Asphalt Shingle)"
-				AbvDeckInsulLayer = "- no insulation -"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
+				AbvDeckInsulLayer = "' + scenario_options['AbvDeckInsulLayer'] + '"
 				RoofDeckLayer = "Wood Siding/sheathing/decking"
 				InsideFinishLayer = "- select inside finish -"
 				AtticFloorLayer = "- no attic floor -"
@@ -1293,17 +1298,17 @@ def outCBECCdata (user_input)
 				WallExtFinishLayer = "- select finish -"
 				OtherSideFinishLayer = "Gypsum Board"
 				FlrExtFinishLayer = "- select finish -"
-				RadiantBarrier = 1
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
 				RaisedHeelTruss = 0
 				RaisedHeelTrussHeight = 3.5
-				RoofingType = "all others"
+				RoofingType = "' + scenario_options['RoofingType'] + '"
 				..
 
 			Cons	"Cathedral"  
 				CanAssignTo = "Cathedral Ceilings"
 				Type = "Wood Framed Ceiling"
-				RoofingLayer = "Light Roof (Asphalt Shingle)"
-				AbvDeckInsulLayer = "- no insulation -"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
+				AbvDeckInsulLayer = "' + scenario_options['AbvDeckInsulLayer'] + '"
 				RoofDeckLayer = "Wood Siding/sheathing/decking"
 				InsideFinishLayer = "Gypsum Board"
 				AtticFloorLayer = "- no attic floor -"
@@ -1317,7 +1322,7 @@ def outCBECCdata (user_input)
 				FurringInsulLayer = "- no insulation -"
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
-				CavityLayer = "R 38"
+				CavityLayer = "' + scenario_options['CeilingCavityLayer'] + '"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
@@ -1326,7 +1331,7 @@ def outCBECCdata (user_input)
 				RadiantBarrier = 0
 				RaisedHeelTruss = 0
 				RaisedHeelTrussHeight = 3.5
-				RoofingType = "all others"
+				RoofingType = "' + scenario_options['RoofingType'] + '"
 				..
 
 			Cons	"Floor to Garage"  
@@ -1474,24 +1479,25 @@ def outCBECCdata (user_input)
 				..
 
 			HVACSys	"HVAC System 1"  
-				Type = "Other Heating and Cooling System"
+				Type = "' + scenario_options['HVACSys_type'] + '"
 				Status = "New"
 				CFIClVentOption = "- none -"
 				CFIClVentFlow = 0
 				CFIClVentPwr = 0
 				CFIClVentAttic = "Attic_Living"
-				NumHeatSystemTypes = 1
+				NumHeatSystemTypes = ' + scenario_options['HVACSys_NumHeatSystemTypes'].to_s + '
 				HeatSystemCount = ( 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
-				HeatSystem[1] = "Heating System 1"
-				AutoSizeHeatInp = 1
+				' + scenario_options['HVACSys_HeatSystem'] + '
+				AutoSizeHeatInp = ' + scenario_options['HVACSys_AutoSizeHeatInp'].to_s + '
 				HeatDucted = 1
-				NumCoolSystemTypes = 1
+				NumCoolSystemTypes = ' + scenario_options['HVACSys_NumCoolSystemTypes'].to_s + '
 				CoolSystemCount = ( 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 )
-				CoolSystem[1] = "Cooling System 1"
+				' + scenario_options['HVACSys_CoolSystem'] + '
 				AutoSizeCoolInp = 1
 				CoolDucted = 1
-				NumHtPumpSystemTypes = 0
-				HtPumpDucted = 0
+				NumHtPumpSystemTypes = ' + scenario_options['HVACSys_NumHtPumpSystemTypes'].to_s + '
+				' + scenario_options['HVACSys_HtPumpSystem'] + '
+				HtPumpDucted = ' + scenario_options['HVACSys_HtPumpDucted'].to_s + '
 				ServesAsDHWHtr = 0
 				DHWTankVolume = 50
 				DHWIntInsulRVal = 0
@@ -1503,30 +1509,46 @@ def outCBECCdata (user_input)
 
 			HVACHeat	"Heating System 1"  
 				Type = "CntrlFurnace - Fuel-fired central furnace"
-				AFUE = 80
+				AFUE = ' + scenario_options['HVACHeat_EFF'].to_s + '
 				..
 
 			HVACCool	"Cooling System 1"  
 				Type = "SplitAirCond - Split air conditioning system"
-				SEER = 14
-				EER = 12.2
-				CFMperTon = 350
-				ACCharge = "Not Verified"
+				SEER = ' + scenario_options['HVACCool_SEER'].to_s + '
+				EER = ' + scenario_options['HVACCool_EER'].to_s + '
+				CFMperTon = ' + scenario_options['HVACCool_CFMperTon'].to_s + '
+				ACCharge = "' + scenario_options['HVACCool_ACCharge'] + '"
 				RefrigerantType = "R410A"
 				UseEERinAnalysis = 1
 				IsMultiSpeed = 0
-				IsZonal = 0
+				IsZonal = ' + scenario_options['HVAC_IsZonal'].to_s + '
 				..
+
+			HVACHtPump   "Heat Pump System 1"  
+			   Type = "SplitHeatPump - Central split heat pump"
+			   HSPF = ' + scenario_options['HVACHeat_EFF'].to_s + '
+			   Cap47 = 24000
+			   Cap17 = 17000
+			   SEER = ' + scenario_options['HVACCool_SEER'].to_s + '
+			   EER = ' + scenario_options['HVACCool_EER'].to_s + '
+			   CFMperTon = ' + scenario_options['HVACCool_CFMperTon'].to_s + '
+			   ACCharge = "' + scenario_options['HVACCool_ACCharge'] + '"
+			   RefrigerantType = "R410A"
+			   ClSizingFactor = 1.1
+			   IsMultiSpeed = 0
+			   IsZonal = ' + scenario_options['HVAC_IsZonal'].to_s + '
+			   UseEERinAnalysis = 0
+			   ..
 
 			HVACDist	"Distribution System 1"  
 				Type = "Ducts located in attic (Ventilated and Unventilated)"
 				Status = "New"
 				IsVerified = 0
-				DefaultSystem = 1
+				DefaultSystem = 0
 				DuctLeakage = "Sealed and tested"
 				DuctLeakageVal = 6
 				HasBypassDuct = 0
-				DuctInsRvalOpt = "6.0"
+				DuctInsRvalOpt = "' + scenario_options['HVACDist_DuctInsRvalOpt'].to_s + '"
 				exDuctInsRvalOpt = "4.2"
 				SupplyDuctArea = 0
 				ReturnDuctArea = 0
@@ -1537,7 +1559,7 @@ def outCBECCdata (user_input)
 				DuctDesign = 0
 				DuctDesignInsRvalue = 6
 				RetDuctDesignInsRvalue = 6
-				LowLkgAH = 0
+				LowLkgAH = ' + scenario_options['HVACDist_LowLkgAH'].to_s + '
 				AreBuried = 0
 				AreDeeplyBuried = 0
 				..
@@ -1545,7 +1567,7 @@ def outCBECCdata (user_input)
 			HVACFan	"HVAC Fan System 1"  
 				Type = "Single Speed PSC Furnace Fan"
 				DefaultSystem = 0
-				WperCFMCool = 0.58
+				WperCFMCool = ' + scenario_options['HVACFan_WperCFMCool'].to_s + '
 				..
 
 			DHWSys	"DHW System 1"  
@@ -1561,11 +1583,11 @@ def outCBECCdata (user_input)
 				..
 
 			DHWHeater	"Water Heater 1"  
-				HeaterElementType = "Natural Gas"
-				TankType = "Small Instantaneous"
-				InputRating = 195000
-				EnergyFactor = 0.82
-				TankVolume = 0
+				HeaterElementType = "' + scenario_options['DHWHeater_HeaterElementType'] + '"
+				TankType = "' + scenario_options['DHWHeater_TankType'] + '"
+				InputRating = ' + scenario_options['DHWHeater_InputRating'].to_s + '
+				EnergyFactor = ' + scenario_options['DHWHeater_EnergyFactor'].to_s + '
+				TankVolume = ' + scenario_options['DHWHeater_TankVolume'].to_s + '
 				ExtInsulRVal = 0
 				AmbientCond = "Unconditioned"
 				RecovEff = 70
@@ -1611,37 +1633,30 @@ def self.create_dialog
 	}
 	dialog = UI::HtmlDialog.new(options)
 	dialog.center
+	puts "Poke self.create_dialog!"
 	dialog
 	end
 
-	def self.show_dialog
+def self.show_dialog
 	if @dialog && @dialog.visible?
 	  @dialog.bring_to_front
 	else
 	  @dialog ||= self.create_dialog
-	  @dialog.add_action_callback('poke') { |action_context, ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight|
-	    self.on_poke(ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight)
+	  @dialog.add_action_callback('poke') { |action_context, project_info, scenario_options|
+	    self.on_poke(project_info, scenario_options)
 	    nil
 	  }
 	  @dialog.set_file(File.dirname(__FILE__) + '/project_info_form.html') #set_html(html)
+	  puts "Poke self.show_dialog!"
 	  @dialog.show
 	end
 end
 
-def self.on_poke(ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight)
-  puts "Poke #{ruleset}!"
-  puts "Poke #{planname}!"
-  puts "Poke #{address}!"
-  puts "Poke #{citystate}!"
-  puts "Poke #{zipcode}!"
-  puts "Poke #{climatezone}!"
-  puts "Poke #{totalsf}!"
-  puts "Poke #{bedroomcount}!"
-  puts "Poke #{storycount}!"
-  puts "Poke #{ceilingheight}!"
+def self.on_poke(project_info, scenario_options)
+  puts "Poke self.on_poke!"
+  
+  outCBECCdata(project_info, scenario_options)
   puts "Sent to outCBECCdata"
-  input = [ruleset, planname, address, citystate, zipcode, climatezone, totalsf, bedroomcount, storycount, ceilingheight]
-  outCBECCdata(input)
   @dialog.close
 end
 
