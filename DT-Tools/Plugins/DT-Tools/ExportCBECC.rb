@@ -1654,7 +1654,7 @@ def self.on_poke(project_info, scenario_options)
   
   outCBECCdata(project_info, scenario_options)
   puts "Sent to outCBECCdata"
-  @dialog.close
+  #@dialog.close
 end
 
 
