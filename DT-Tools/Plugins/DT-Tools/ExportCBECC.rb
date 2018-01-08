@@ -44,6 +44,7 @@ def initData
 	@conditioned2nd = 0
 	@conditioned3rd = 0
 	@unconditioned = 0
+	@hasGarage = 0
 	@slab_name.clear
 	@slab_onGrade.clear # length of slab edge on grade.
 	@slab_perimeter.clear # total boundary of slab
@@ -240,6 +241,9 @@ def getSlabBoundary(baseFace)
 	bg_area = 0 # total area of fdtn wall used to calc height
 	bg_length = 0 # total length of fdtn wall used to calc height
 	@slab_name.push baseFace.material.display_name
+	if baseFace.material.display_name == "slab_Garage"
+		@hasGarage = 1
+	end
 	@slab_area.push baseFace.area
 	@slab_onGrade.push 0
 	@slab_exposed.push 0
@@ -525,7 +529,7 @@ def outCBECCdata (project_info, scenario_options)
 				FrontOrientation = 0
 				NatGasAvailable = 1
 				GasType = "Natural Gas"
-				HasGarage = 1
+				HasGarage = ' + @hasGarage.to_s + '
 				UnitIAQOption[1] = "Default Minimum IAQ Fan"
 				UnitIAQFanCnt1[1] = 1
 				UnitIAQFanCnt2[1] = 1
@@ -589,7 +593,6 @@ def outCBECCdata (project_info, scenario_options)
 					')
 
 					out_file.puts(getWindows mat_out, @orients[at])
-
 			when '2x6ExtWall-Stucco'
 				out_file.puts('
 				ExtWall	"'+ @orients[at] + '_'  + mat_out + '"
@@ -604,7 +607,6 @@ def outCBECCdata (project_info, scenario_options)
 					')
 					
 					out_file.puts(getWindows mat_out, @orients[at])
-
 			when '2x4ExtWall-Siding'
 				out_file.puts('
 				ExtWall	"'+ @orients[at] + '_'  + mat_out + '"
@@ -619,7 +621,6 @@ def outCBECCdata (project_info, scenario_options)
 					')
 					
 					out_file.puts(getWindows mat_out, @orients[at])
-
 			when '2x6ExtWall-Siding'
 				out_file.puts('
 				ExtWall	"'+ @orients[at] + '_' + mat_out + '"
@@ -634,7 +635,6 @@ def outCBECCdata (project_info, scenario_options)
 					')
 					
 					out_file.puts(getWindows mat_out, @orients[at])
-
 			when '2x4ToGarageWall'
 				out_file.puts('
 				IntWall	"'+ @orients[at] + '_' + mat_out + '"
@@ -705,8 +705,8 @@ def outCBECCdata (project_info, scenario_options)
 					')
 				puts "Step 5"
 			when 'CeilingCathedral'
-			out_file.puts('
-			CathedralCeiling	"' + mat_out + '"  
+				out_file.puts('
+				CathedralCeiling	"' + mat_out + '"  
 					Status = "New"
 					RoofRise = ' + scenario_options['RoofRise'] + '
 					Orientation = "Front"
@@ -757,7 +757,7 @@ def outCBECCdata (project_info, scenario_options)
 						AvgWallHeight = 2
 						..
 					')
-			when  'Zone_Living'
+			when 'Zone_Living'
 				@conditioned = round(@areas[at]/@area_divisor)
 			when 'Zone_Garage'
 				@unconditioned = round(@areas[at]/@area_divisor)
