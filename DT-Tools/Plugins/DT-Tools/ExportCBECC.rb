@@ -29,6 +29,7 @@ def initData
 	@orients.clear # angle of material
 	@angles.clear
 	@windows.clear
+	@win_type.clear
 	@win_areas.clear
 	@win_orients.clear
 	@win_angles.clear
@@ -114,7 +115,31 @@ def whatMaterial (face)
 			case mat_name
 			when "win_Oper", "win_Fixed", "win_SGD", "win_FRD", "win_Door"
 				wallIn = orient + "_" + getWallFace(face)
-				addWindow(mat_name, area, wallIn)
+				
+				#### Try to find length of edges 
+				edges = face.edges
+				win_width = edges[0].length.to_s
+				win_height = edges[1].length.to_s
+
+				if win_width.include? '"'
+					#window is half dimension, so no need to add "0" to name
+					win_width = win_width.tr("'", '').tr('"','').tr(' ','')
+				else
+					#window is full dimension, so need to add "0" to name
+					win_width = win_width.tr("'", '').tr('"','').tr(' ','') + '0'
+				end
+				if win_height.include? '"'
+					#window is half dimension, so no need to add "0" to name
+					win_height = win_height.tr("'", '').tr('"','').tr(' ','')
+				else
+					#window is full dimension, so need to add "0" to name
+					win_height = win_height.tr("'", '').tr('"','').tr(' ','') + '0'
+				end
+
+				win_name = win_width + win_height
+				#### END Try to find length of edges
+
+				addWindow(mat_name, area, wallIn, win_name)
 			else
 				addMaterial(mat_name, area, orient, angleOut)
 			end
@@ -177,11 +202,12 @@ def getWallFace(windowFace)
 	# end # on_grade
 end #getWallFace
 
-def addWindow(nameIn, areaIn, wallIn)
+def addWindow(typeIn, areaIn, wallIn, win_name)
 	
-		@windows.push nameIn
+		@windows.push typeIn
 		@win_areas.push areaIn
 		@win_wall.push wallIn
+		@win_type.push win_name
 
 
 		at = @win_wall_types.length
@@ -358,6 +384,9 @@ end #slabBooundry
 def round(numb)
 	sprintf("%.0f", numb)
 end #round
+def round_win(numb)
+	sprintf("%.1f", numb)
+end #round
 
 def getWindows(wallFace, wallOrient)
 	windows_out = ''
@@ -370,10 +399,10 @@ def getWindows(wallFace, wallOrient)
 			case @windows[at].to_s
 			when "win_Door"
 				windows_out += '
-				Door	"Door_' + at.to_s + '"  
+				Door	"' + @win_type[at] + '_D' + at.to_s + '"  
 					Status = "New"
 					IsVerified = 0
-					Area = ' + round(@win_areas[at] / @area_divisor) +'
+					Area = ' + round_win(@win_areas[at] / @area_divisor) +'
 					Ufactor = 0.5
 					exUfactor = 0.5
 					..
@@ -381,14 +410,14 @@ def getWindows(wallFace, wallOrient)
 				#puts "Door_" + at.to_s
 			else
 				windows_out += '
-				Win	"Win_' + at.to_s + '"  
+				Win	"' + @win_type[at] + '_W' + at.to_s + '"  
 					Status = "New"
 					IsVerified = 0
 					SpecMethod = "Overall Window Area"
-					Area = ' + round(@win_areas[at]/@area_divisor) +'
+					Area = ' + round_win(@win_areas[at]/@area_divisor) +'
 					Multiplier = 1
 					WinType = "' + @windows[at] + '"
-					exArea = '+ round(@win_areas[at]/@area_divisor) +'
+					exArea = '+ round_win(@win_areas[at]/@area_divisor) +'
 					exMultiplier = 1
 					exUfactorSHGCSource = "NFRC"
 					exExteriorShade = "Insect Screen (default)"
@@ -421,7 +450,6 @@ def getWindows(wallFace, wallOrient)
 					exRightFinBotUp = 0
 					..
 				'
-				#puts "Win_" + at.to_s
 			end #when
 		end
 		at -= 1
@@ -647,6 +675,8 @@ def outCBECCdata (project_info, scenario_options)
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
 						..
 					')
+
+					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x6ToGarageWall'
 				out_file.puts('
 				IntWall	"'+ @orients[at] + '_' + mat_out + '"
@@ -659,6 +689,8 @@ def outCBECCdata (project_info, scenario_options)
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
 						..
 					')
+
+					out_file.puts(getWindows mat_out, @orients[at])
 			when 'KneeWall'
 				out_file.puts('
 				IntWall	"'+ @orients[at] + '_' + mat_out + '"
@@ -867,13 +899,13 @@ def outCBECCdata (project_info, scenario_options)
 				SlabFloor	"' + @slab_name[at] + '"  
 					Status = "New"
 					IsVerified = 0
-					Surface = "Default (80% carpeted/covered, 20% exposed)"
+					Surface = "Exposed"
 					Area = ' + round(@slab_area[at]/@area_divisor) + '
 					Perimeter = ' + round(@slab_perimeter[at]/@length_divisor) + '
 					HeatedSlab = 0
 					EdgeInsulation = 0
 					EdgeInsulOption = "R-5, 8 inches"
-					exSurface = "Default (80% carpeted/covered, 20% exposed)"
+					exSurface = "Exposed"
 					exEdgeInsulOption = "R-5, 8 inches"
 					..
 			')
@@ -1690,6 +1722,7 @@ end # getMaterialData
 @orients=[]
 @angles=[]
 @windows=[]
+@win_type=[]
 @win_areas = []
 @win_orients=[]
 @win_angles=[]
