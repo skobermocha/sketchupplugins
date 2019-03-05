@@ -536,8 +536,8 @@ def outCBECCdata (project_info, scenario_options)
 				IsCAHPNGasUtil = 1
 				IsCAHPDOEChalHome = 0
 				IsCAHPFutureCode = 0
-				Notes = ""
-   				Remarks = ""
+				Notes = "' + project_info[10] + '"
+   				Remarks = "' + project_info[11] + '"
 				ClimateZone = "' + project_info[5] + '"
 				Address = "' + project_info[2] + '"
 				ZipCode = ' + project_info[4] + '

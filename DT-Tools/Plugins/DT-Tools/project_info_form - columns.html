@@ -87,7 +87,16 @@
               <input type="text" class="form-control" id="ceilingheight" value="9">
             </div>
         </div>
-
+        <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="notes">Notes Shown on CF1R</label>
+              <input type="text" class="form-control" id="notes" placeholder="Make note of worst case elevation used here.">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="remarks">Notes NOT Shown on CF1R</label>
+              <input type="text" class="form-control" id="remarks" placeholder="Make notes to not be shown here.">
+            </div>
+        </div>
         <!-- 3 columns for scenarios options -->
         <h1>Scenarios</h1>
         <div class="form-row">
@@ -771,7 +780,7 @@
                 break;
             }
         }
-        var project_info = [ruleset, document.getElementById("planname").value, document.getElementById("address").value, document.getElementById("citystate").value, document.getElementById("zipcode").value, document.getElementById("climatezone").value, document.getElementById("totalsf").value, document.getElementById("bedroomcount").value, document.getElementById("storycount").value, document.getElementById("ceilingheight").value];
+        var project_info = [ruleset, document.getElementById("planname").value, document.getElementById("address").value, document.getElementById("citystate").value, document.getElementById("zipcode").value, document.getElementById("climatezone").value, document.getElementById("totalsf").value, document.getElementById("bedroomcount").value, document.getElementById("storycount").value, document.getElementById("ceilingheight").value, document.getElementById("notes").value, document.getElementById("remarks").value];
         return project_info;
 
       }
