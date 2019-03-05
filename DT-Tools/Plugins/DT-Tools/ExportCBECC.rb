@@ -472,6 +472,10 @@ def outCBECCdata (project_info, scenario_options)
 		filetype = '.ribd16'
 		standardVersion = "Compliance 2017"
 		refrigeff = "from # bedrooms/unit"
+	when "CA Res 2019"
+		filetype = '.ribd19'
+		standardVersion = "Compliance 2020"
+		refrigeff = "from # bedrooms/unit"
 	else
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
@@ -500,10 +504,6 @@ def outCBECCdata (project_info, scenario_options)
 			RulesetFilename	"' + project_info[0] + '.bin"
 
 			Proj	"' + project_info[1] + '"  
-				SoftwareVersion = "CBECC-Res 2013-4b (812)"
-				BEMVersion = 5
-				CreateDate = 1472056558
-				ModDate = 1472056726
 				RunTitle = "' + scenario_options['RunTitle'] + '"
 				AnalysisType = "Proposed and Standard"
 				StandardsVersion = "' + standardVersion + '"
@@ -512,8 +512,8 @@ def outCBECCdata (project_info, scenario_options)
 				ComplianceReportXML = 1
 			')
 			puts "Step 1"
-			#if user selected CBECC 2016 file, we need to inject this stuff too.
-			if project_info[0] == "CA Res 2016"
+			#if user selected CBECC 2016 or 2019 file, we need to inject this stuff too.
+			if project_info[0] == "CA Res 2016" || project_info[0] == "CA Res 2019"
 				out_file.puts('
 				PVCompCredit = 0
 				PVWInputs = "Simplified"
