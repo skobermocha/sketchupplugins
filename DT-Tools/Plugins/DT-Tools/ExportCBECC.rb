@@ -114,9 +114,8 @@ def whatMaterial (face)
 			#puts mat_name
 			case mat_name
 			when "win_Oper", "win_Fixed", "win_SGD", "win_FRD", "win_Door"
-
 				wallIn = orient + "_" + getWallFace(face)
-
+				
 				#### Try to find length of edges 
 				edges = face.edges
 				win_width = edges[0].length.to_s
@@ -468,18 +467,26 @@ def outCBECCdata (project_info, scenario_options)
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
 		refrigeff = "default (669 kWh/yr)"
+		qii = scenario_options['InsulConsQuality']
 	when "CA Res 2016"
 		filetype = '.ribd16'
 		standardVersion = "Compliance 2017"
 		refrigeff = "from # bedrooms/unit"
+		qii = scenario_options['InsulConsQuality']
 	when "CA Res 2019"
 		filetype = '.ribd19'
 		standardVersion = "Compliance 2020"
 		refrigeff = "from # bedrooms/unit"
+		if scenario_options['InsulConsQuality'] == "Improved"
+			qii = "Yes"
+		else
+			qii = "No"
+		end
 	else
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
 		refrigeff = "default (669 kWh/yr)"
+		qii = scenario_options['InsulConsQuality']
 	end
 	puts filetype
 
@@ -504,6 +511,10 @@ def outCBECCdata (project_info, scenario_options)
 			RulesetFilename	"' + project_info[0] + '.bin"
 
 			Proj	"' + project_info[1] + '"  
+				SoftwareVersion = "CBECC-Res 2013-4b (812)"
+				BEMVersion = 7
+				CreateDate = 1472056558
+				ModDate = 1472056726
 				RunTitle = "' + scenario_options['RunTitle'] + '"
 				AnalysisType = "Proposed and Standard"
 				StandardsVersion = "' + standardVersion + '"
@@ -512,8 +523,8 @@ def outCBECCdata (project_info, scenario_options)
 				ComplianceReportXML = 1
 			')
 			puts "Step 1"
-			#if user selected CBECC 2016 or 2019 file, we need to inject this stuff too.
-			if project_info[0] == "CA Res 2016" || project_info[0] == "CA Res 2019"
+			#if user selected CBECC 2016 file, we need to inject this stuff too.
+			if project_info[0] == "CA Res 2016"
 				out_file.puts('
 				PVCompCredit = 0
 				PVWInputs = "Simplified"
@@ -522,8 +533,49 @@ def outCBECCdata (project_info, scenario_options)
 					"Standard" )
 					PVWCalFlexInstall = ( 1, 1, 1, 1, 1 )
 					PVWArrayTiltInput = ( "deg", "deg", "deg", "deg", "deg" )
-					')
+				')
 			end	 
+			#if user selected CBECC 2019 file, we need to inject this stuff too.
+			if project_info[0] == "CA Res 2019"
+				out_file.puts('
+				PVCompCredit = 0
+				PVWInputs = "Simplified"
+				PVSizeOption = "Standard Design PV"
+				PVWDCSysSize = ( 1, 0, 0, 0, 0 )
+				PVWModuleType = ( "Standard", "Standard", "Standard", "Standard", 
+					"Standard" )
+				PVWCalFlexInstType = ( "CFI1", "CFI1", "CFI1", "CFI1", "CFI1" )
+				PVWGeomSpecMethod = ( "azimuth and tilt", "azimuth and tilt", 
+                         "azimuth and tilt", "azimuth and tilt", 
+                         "azimuth and tilt" )
+			   PVWLocSpecMethod = ( "- not specified -", "- not specified -", 
+			                        "- not specified -", "- not specified -", 
+			                        "- not specified -" )
+			   PVWRelLocSpecMeth = ( "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -" )
+			   PVWAzm[1] = 170
+			   PVWArrayTiltInput = ( "deg", "deg", "deg", "deg", "deg" )
+			   PVWArrayTiltPitch[1] = 5
+			   PVWArrayTiltDeg[1] = 22.6199
+			   PVWArrayType = ( "Fixed (open rack)", "Fixed (open rack)", 
+			                    "Fixed (open rack)", "Fixed (open rack)", 
+			                    "Fixed (open rack)" )
+			   PVWPwrElec = ( "- none -", "- none -", "- none -", "- none -", 
+			                  "- none -" )
+			   PVWSolarAccess[1] = 100
+			   PVWInverterEff[1] = 96
+			   AllowExcessPVEDR = 0
+			   ReducedPVReq = 0
+			   ReducedPVReqExcept = "- select applicable required PV exception -"
+			   BattMaxCap = 0
+			   BatteryControl = "Basic"
+			   BattGridHarmCredit = 0
+			   TDVSummerPkFirstHr = 19
+			   ')
+			end	
 			puts "Step 2"
 		#continue default file stuff
 			out_file.puts('  
@@ -536,8 +588,8 @@ def outCBECCdata (project_info, scenario_options)
 				IsCAHPNGasUtil = 1
 				IsCAHPDOEChalHome = 0
 				IsCAHPFutureCode = 0
-				Notes = "' + project_info[10] + '"
-   				Remarks = "' + project_info[11] + '"
+				Notes = ""
+   				Remarks = ""
 				ClimateZone = "' + project_info[5] + '"
 				Address = "' + project_info[2] + '"
 				ZipCode = ' + project_info[4] + '
@@ -551,7 +603,7 @@ def outCBECCdata (project_info, scenario_options)
 				IsVerified = 0
 				IsAddAlone = 0
 				AlterIncl2Categs = 0
-				InsulConsQuality = "' + scenario_options['InsulConsQuality'] + '"
+				InsulConsQuality = "' + qii + '"
 				NumBedrooms = ' + project_info[7] + '
 				NumAddBedrooms = 0
 				AllOrientations = 1
@@ -605,24 +657,16 @@ def outCBECCdata (project_info, scenario_options)
 	
 		while at > -1
 			mat_out = @mats[at] 
-			
-			if @orients[at] == 'Front' || @orients[at] == 'Left' || @orients[at] == 'Back' || @orients[at] == 'Right'
-				wallName = @orients[at]
-				wallOrient = @orients[at]
-			else
-				wallName = @angles[at]
-				wallOrient = '- specify -'
-			end
-
+		
 			#determine what material we are working with
 			case @mats[at].to_s
 			when '2x4ExtWall-Stucco'
 				out_file.puts('
-				ExtWall	"'+ wallName + '_' + mat_out + '"
+				ExtWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x4 Ext Wall -Stucco"
-						Orientation = "' + wallOrient + '"
+						Orientation = "' + @orients[at] + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
@@ -632,11 +676,11 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x6ExtWall-Stucco'
 				out_file.puts('
-				ExtWall	"'+ wallName + '_'  + mat_out + '"
+				ExtWall	"'+ @orients[at] + '_'  + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x6 Ext Wall -Stucco"
-						Orientation = "' + wallOrient + '"
+						Orientation = "' + @orients[at] + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
@@ -646,11 +690,11 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x4ExtWall-Siding'
 				out_file.puts('
-				ExtWall	"'+ wallName + '_'  + mat_out + '"
+				ExtWall	"'+ @orients[at] + '_'  + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x4 Ext Wall -Siding"
-						Orientation = "' + wallOrient + '"
+						Orientation = "' + @orients[at] + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
@@ -660,11 +704,11 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x6ExtWall-Siding'
 				out_file.puts('
-				ExtWall	"'+ wallName + '_' + mat_out + '"
+				ExtWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x6 Ext Wall -Siding"
-						Orientation = "' + wallOrient + '"
+						Orientation = "' + @orients[at] + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
@@ -674,7 +718,7 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x4ToGarageWall'
 				out_file.puts('
-				IntWall	"'+ wallName + '_' + mat_out + '"
+				IntWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x4 ToGarage Wall"
@@ -688,7 +732,7 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x6ToGarageWall'
 				out_file.puts('
-				IntWall	"'+ wallName + '_' + mat_out + '"
+				IntWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x6 ToGarage Wall"
@@ -702,7 +746,7 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when 'KneeWall'
 				out_file.puts('
-				IntWall	"'+ wallName + '_' + mat_out + '"
+				IntWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "Knee Wall"
@@ -713,7 +757,7 @@ def outCBECCdata (project_info, scenario_options)
 					')
 			when 'PartyWall'
 				out_file.puts('
-				IntWall	"'+ wallName + '_' + mat_out + '"
+				IntWall	"'+ @orients[at] + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "Party Wall"
@@ -732,6 +776,14 @@ def outCBECCdata (project_info, scenario_options)
 						Construction = "Ceiling"
 						AtticZone = "Attic_Living"
 						Area = ' + round(@areas[at]/@area_divisor) + '
+						..
+
+				CeilingBelowAttic	"CLG_FAU"  
+						Status = "New"
+						IsVerified = 0
+						Construction = "Ceiling_FAU"
+						AtticZone = "Attic_Living"
+						Area = 50
 						..
 
 					Attic	"Attic_Living"  
@@ -1244,6 +1296,36 @@ def outCBECCdata (project_info, scenario_options)
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
 				CavityLayer = "' + scenario_options['CeilingCavityLayer'] + '"
+				FrameLayer = "2x4 @ 16 in. O.C."
+				SheathInsulLayer = "- no sheathing/insul. -"
+				WallExtFinishLayer = "- select finish -"
+				OtherSideFinishLayer = "Gypsum Board"
+				FlrExtFinishLayer = "- select finish -"
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
+				RaisedHeelTruss = 0
+				RaisedHeelTrussHeight = 3.5
+				RoofingType = "' + scenario_options['RoofingType'] + '"
+				..
+
+			Cons	"Ceiling_FAU"  
+				CanAssignTo = "Ceilings (below attic)"
+				Type = "Wood Framed Ceiling"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
+				AbvDeckInsulLayer = "- no insulation -"
+				RoofDeckLayer = "Wood Siding/sheathing/decking"
+				InsideFinishLayer = "Gypsum Board"
+				AtticFloorLayer = "- no attic floor -"
+				FloorSurfaceLayer = "Carpeted"
+				FlrConcreteFillLayer = "- no concrete fill -"
+				FloorDeckLayer = "Wood Siding/sheathing/decking"
+				SheathInsul2Layer = "- no sheathing/insul. -"
+				MassLayer = "- none -"
+				MassThickness = "- none -"
+				FurringInsul2Layer = "- no insulation -"
+				FurringInsulLayer = "- no insulation -"
+				Furring2Layer = "- none -"
+				FurringLayer = "- none -"
+				CavityLayer = "R 22"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
