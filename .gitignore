@@ -1,4 +1,6 @@
 *.skp
 *.ribd
 *.ribd16
+*.ribd19
 *.lnk
+*.log

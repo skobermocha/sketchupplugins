@@ -467,14 +467,26 @@ def outCBECCdata (project_info, scenario_options)
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
 		refrigeff = "default (669 kWh/yr)"
+		qii = scenario_options['InsulConsQuality']
 	when "CA Res 2016"
 		filetype = '.ribd16'
 		standardVersion = "Compliance 2017"
 		refrigeff = "from # bedrooms/unit"
+		qii = scenario_options['InsulConsQuality']
+	when "CA Res 2019"
+		filetype = '.ribd19'
+		standardVersion = "Compliance 2020"
+		refrigeff = "from # bedrooms/unit"
+		if scenario_options['InsulConsQuality'] == "Improved"
+			qii = "Yes"
+		else
+			qii = "No"
+		end
 	else
 		filetype = '.ribd'
 		standardVersion = "Compliance 2015"
 		refrigeff = "default (669 kWh/yr)"
+		qii = scenario_options['InsulConsQuality']
 	end
 	puts filetype
 
@@ -500,7 +512,7 @@ def outCBECCdata (project_info, scenario_options)
 
 			Proj	"' + project_info[1] + '"  
 				SoftwareVersion = "CBECC-Res 2013-4b (812)"
-				BEMVersion = 5
+				BEMVersion = 7
 				CreateDate = 1472056558
 				ModDate = 1472056726
 				RunTitle = "' + scenario_options['RunTitle'] + '"
@@ -521,8 +533,49 @@ def outCBECCdata (project_info, scenario_options)
 					"Standard" )
 					PVWCalFlexInstall = ( 1, 1, 1, 1, 1 )
 					PVWArrayTiltInput = ( "deg", "deg", "deg", "deg", "deg" )
-					')
+				')
 			end	 
+			#if user selected CBECC 2019 file, we need to inject this stuff too.
+			if project_info[0] == "CA Res 2019"
+				out_file.puts('
+				PVCompCredit = 0
+				PVWInputs = "Simplified"
+				PVSizeOption = "Standard Design PV"
+				PVWDCSysSize = ( 1, 0, 0, 0, 0 )
+				PVWModuleType = ( "Standard", "Standard", "Standard", "Standard", 
+					"Standard" )
+				PVWCalFlexInstType = ( "CFI1", "CFI1", "CFI1", "CFI1", "CFI1" )
+				PVWGeomSpecMethod = ( "azimuth and tilt", "azimuth and tilt", 
+                         "azimuth and tilt", "azimuth and tilt", 
+                         "azimuth and tilt" )
+			   PVWLocSpecMethod = ( "- not specified -", "- not specified -", 
+			                        "- not specified -", "- not specified -", 
+			                        "- not specified -" )
+			   PVWRelLocSpecMeth = ( "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -", 
+			                         "- specify relative position -" )
+			   PVWAzm[1] = 170
+			   PVWArrayTiltInput = ( "deg", "deg", "deg", "deg", "deg" )
+			   PVWArrayTiltPitch[1] = 5
+			   PVWArrayTiltDeg[1] = 22.6199
+			   PVWArrayType = ( "Fixed (open rack)", "Fixed (open rack)", 
+			                    "Fixed (open rack)", "Fixed (open rack)", 
+			                    "Fixed (open rack)" )
+			   PVWPwrElec = ( "- none -", "- none -", "- none -", "- none -", 
+			                  "- none -" )
+			   PVWSolarAccess[1] = 100
+			   PVWInverterEff[1] = 96
+			   AllowExcessPVEDR = 0
+			   ReducedPVReq = 0
+			   ReducedPVReqExcept = "- select applicable required PV exception -"
+			   BattMaxCap = 0
+			   BatteryControl = "Basic"
+			   BattGridHarmCredit = 0
+			   TDVSummerPkFirstHr = 19
+			   ')
+			end	
 			puts "Step 2"
 		#continue default file stuff
 			out_file.puts('  
@@ -550,7 +603,7 @@ def outCBECCdata (project_info, scenario_options)
 				IsVerified = 0
 				IsAddAlone = 0
 				AlterIncl2Categs = 0
-				InsulConsQuality = "' + scenario_options['InsulConsQuality'] + '"
+				InsulConsQuality = "' + qii + '"
 				NumBedrooms = ' + project_info[7] + '
 				NumAddBedrooms = 0
 				AllOrientations = 1
@@ -723,6 +776,14 @@ def outCBECCdata (project_info, scenario_options)
 						Construction = "Ceiling"
 						AtticZone = "Attic_Living"
 						Area = ' + round(@areas[at]/@area_divisor) + '
+						..
+
+				CeilingBelowAttic	"CLG_FAU"  
+						Status = "New"
+						IsVerified = 0
+						Construction = "Ceiling_FAU"
+						AtticZone = "Attic_Living"
+						Area = 50
 						..
 
 					Attic	"Attic_Living"  
@@ -1235,6 +1296,36 @@ def outCBECCdata (project_info, scenario_options)
 				Furring2Layer = "- none -"
 				FurringLayer = "- none -"
 				CavityLayer = "' + scenario_options['CeilingCavityLayer'] + '"
+				FrameLayer = "2x4 @ 16 in. O.C."
+				SheathInsulLayer = "- no sheathing/insul. -"
+				WallExtFinishLayer = "- select finish -"
+				OtherSideFinishLayer = "Gypsum Board"
+				FlrExtFinishLayer = "- select finish -"
+				RadiantBarrier = ' + scenario_options['RadiantBarrier'].to_s + '
+				RaisedHeelTruss = 0
+				RaisedHeelTrussHeight = 3.5
+				RoofingType = "' + scenario_options['RoofingType'] + '"
+				..
+
+			Cons	"Ceiling_FAU"  
+				CanAssignTo = "Ceilings (below attic)"
+				Type = "Wood Framed Ceiling"
+				RoofingLayer = "' + scenario_options['RoofingLayer'] + '"
+				AbvDeckInsulLayer = "- no insulation -"
+				RoofDeckLayer = "Wood Siding/sheathing/decking"
+				InsideFinishLayer = "Gypsum Board"
+				AtticFloorLayer = "- no attic floor -"
+				FloorSurfaceLayer = "Carpeted"
+				FlrConcreteFillLayer = "- no concrete fill -"
+				FloorDeckLayer = "Wood Siding/sheathing/decking"
+				SheathInsul2Layer = "- no sheathing/insul. -"
+				MassLayer = "- none -"
+				MassThickness = "- none -"
+				FurringInsul2Layer = "- no insulation -"
+				FurringInsulLayer = "- no insulation -"
+				Furring2Layer = "- none -"
+				FurringLayer = "- none -"
+				CavityLayer = "R 22"
 				FrameLayer = "2x4 @ 16 in. O.C."
 				SheathInsulLayer = "- no sheathing/insul. -"
 				WallExtFinishLayer = "- select finish -"
