@@ -79,6 +79,7 @@ def whatMaterial (face)
 		case angle.to_s
 		when '0'
 			angleOut = '0'
+			orient = 'Front'
 		when '90'
 			angleOut = '270'
 			orient = 'Right'
@@ -88,6 +89,18 @@ def whatMaterial (face)
   		when '270'
   			angleOut = '90'
   			orient = 'Left'
+  		when '45'
+  			angleOut = '135'
+  			orient = '- specify -'
+  		when '135'
+  			angleOut = '225'
+  			orient = '- specify -'
+  		when '225'
+  			angleOut = '315'
+  			orient = '- specify -'
+  		when '315'
+  			angleOut = '45'
+  			orient = '- specify -'
   		else
   			angleOut = angle.to_s
   			orient = angle.to_s
@@ -657,16 +670,24 @@ def outCBECCdata (project_info, scenario_options)
 	
 		while at > -1
 			mat_out = @mats[at] 
-		
+			
+			if @orients[at] == 'Front' || @orients[at] == 'Left' || @orients[at] == 'Back' || @orients[at] == 'Right'
+				wallName = @orients[at]
+				wallOrient = @orients[at]
+			else
+				wallName = @angles[at]
+				wallOrient = '- specify -'
+			end
+			
 			#determine what material we are working with
 			case @mats[at].to_s
 			when '2x4ExtWall-Stucco'
 				out_file.puts('
-				ExtWall	"'+ @orients[at] + '_' + mat_out + '"
+				ExtWall	"'+ wallName + '_' + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x4 Ext Wall -Stucco"
-						Orientation = "' + @orients[at] + '"
+						Orientation = "' + wallOrient + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
@@ -676,11 +697,11 @@ def outCBECCdata (project_info, scenario_options)
 					out_file.puts(getWindows mat_out, @orients[at])
 			when '2x6ExtWall-Stucco'
 				out_file.puts('
-				ExtWall	"'+ @orients[at] + '_'  + mat_out + '"
+				ExtWall	"'+ wallName + '_'  + mat_out + '"
 						Status = "New"
 						IsVerified = 0
 						Construction = "2x6 Ext Wall -Stucco"
-						Orientation = "' + @orients[at] + '"
+						Orientation = "' + wallOrient + '"
 						OrientationValue = ' + @angles[at] + '
 						Tilt = 90
 						Area = ' + round(@areas[at]/@area_divisor + getWinTotals(mat_out, @orients[at])/@area_divisor)  +'
